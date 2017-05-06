@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="dooqu_ddz" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/dooqu_ddz" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="bin/Debug" />
+				<Option object_output="obj/Debug/" />
+				<Option type="3" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-std=c++11" />
+					<Add option="-g" />
+					<Add option="-fPIC" />
+					<Add directory="/home/jack/cpp_proj/dooqu_service/src" />
+				</Compiler>
+				<Linker>
+					<Add option="-l:libdooqu_service.a" />
+					<Add directory="/home/jack/cpp_proj/dooqu_service/bin/Debug" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/dooqu_ddz" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="obj/Release/" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Unit filename="src/ddz_desk.cpp" />
+		<Unit filename="src/ddz_desk.h" />
+		<Unit filename="src/ddz_game_info.cpp" />
+		<Unit filename="src/ddz_game_info.h" />
+		<Unit filename="src/ddz_plugin.cpp" />
+		<Unit filename="src/ddz_plugin.h" />
+		<Unit filename="src/poker_finder.cpp" />
+		<Unit filename="src/poker_finder.h" />
+		<Unit filename="src/poker_info.cpp" />
+		<Unit filename="src/poker_info.h" />
+		<Unit filename="src/poker_parser.cpp" />
+		<Unit filename="src/poker_parser.h" />
+		<Unit filename="src/service_error.h" />
+		<Extensions>
+			<code_completion />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
