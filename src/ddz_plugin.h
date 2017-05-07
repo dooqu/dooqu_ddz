@@ -6,14 +6,13 @@
 #include <cstring>
 #include <vector>
 #include <boost/pool/singleton_pool.hpp>
-#include "service/game_plugin.h"
+#include "dooqu_service.h"
 #include "ddz_desk.h"
 #include "poker_parser.h"
 #include "poker_info.h"
 #include "poker_finder.h"
 #include "ddz_game_info.h"
 #include "service_error.h"
-#include "util/utility.h"
 
 
 
@@ -91,27 +90,19 @@ using namespace dooqu_server::ddz;
 
 extern "C"
 {
-dooqu_service::service::game_plugin*
-create_plugin(game_service* service,
-                char* game_id,
-                char* name,
-                int frequence,
-                int capacity,
-                std::map<const char*, const char*, dooqu_service::service::char_key_op>* configs)
-{
-    int val = 15;
-    std::map<const char*, const char*, dooqu_service::service::char_key_op>::iterator finder;
-    finder = configs->find("game_value");
-    if(finder != configs->end())
+     game_plugin* create_plugin(game_service* service,
+                  char* game_id,
+                  char* name,
+                  int frequence,
+                  int capacity,
+                  std::map<const char*, const char*,char_key_op>* configs)
     {
-        val = atoi((*finder).second);
+
+        ddz_plugin* plugin = new ddz_plugin(service, game_id, name, frequence, capacity, 15, 21000);
+        plugin->config(configs);
+        return plugin;
     }
 
-
-    ddz_plugin* plugin = new ddz_plugin(service, game_id, name, frequence, capacity , 15, 21000);
-    plugin->config(configs);
-    return plugin;
-}
 }
 
 
