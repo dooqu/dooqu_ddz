@@ -17,11 +17,12 @@
 					<Add option="-std=c++11" />
 					<Add option="-g" />
 					<Add option="-fPIC" />
-					<Add directory="/home/jack/cpp_proj/dooqu_service/src" />
+					<Add option="-fpermissive" />
+					<Add directory="/home/jack/cpp_proj/dooqu_service_ssl/src" />
 				</Compiler>
 				<Linker>
-					<Add option="-l:libdooqu_service.a" />
-					<Add directory="/home/jack/cpp_proj/dooqu_service/bin/Debug" />
+					<Add option="-l:libdooqu_service_ssl.a" />
+					<Add directory="/home/jack/cpp_proj/dooqu_service_ssl/bin/Debug" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -34,6 +35,8 @@
 				<Compiler>
 					<Add option="-Wall" />
 					<Add option="-O2" />
+					<Add directory="include" />
+					<Add directory="dooqu_service/src/data" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />

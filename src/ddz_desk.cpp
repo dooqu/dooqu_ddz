@@ -67,12 +67,12 @@ namespace dooqu_server
 			}
 		}
 
-		game_client* ddz_desk::get_landlord()
+		ws_client* ddz_desk::get_landlord()
 		{
 			return this->landlord_;
 		}
 
-		void ddz_desk::set_landlord(game_client* client)
+		void ddz_desk::set_landlord(ws_client* client)
 		{
 			this->landlord_ = client;
 		}
@@ -82,7 +82,7 @@ namespace dooqu_server
 			this->last_actived_time_.restart();
 		}
 
-		void ddz_desk::set(int pos_index, game_client* client)
+		void ddz_desk::set(int pos_index, ws_client* client)
 		{
 			this->clients_[pos_index] = client;
 		}
@@ -98,12 +98,12 @@ namespace dooqu_server
 			return this->clients_[pos_index] == NULL;
 		}
 
-		game_client* ddz_desk::pos_client(int pos_index)
+		ws_client* ddz_desk::pos_client(int pos_index)
 		{
 			return this->clients_[pos_index];
 		}
 
-		game_client* ddz_desk::first()
+		ws_client* ddz_desk::first()
 		{
 			if (this->first_pos_ == -1)
 				return NULL;
@@ -111,7 +111,7 @@ namespace dooqu_server
 			return this->clients_[this->first_pos_];
 		}
 
-		game_client* ddz_desk::current()
+		ws_client* ddz_desk::current()
 		{
 			if (this->curr_pos_ == -1)
 				return NULL;
@@ -119,12 +119,12 @@ namespace dooqu_server
 			return this->clients_[this->curr_pos_];
 		}
 
-		game_client* ddz_desk::next()
+		ws_client* ddz_desk::next()
 		{
 			return this->clients_[this->get_next_pos_index()];
 		}
 
-		game_client* ddz_desk::last()
+		ws_client* ddz_desk::last()
 		{
 			if (this->first_pos_ == -1)
 				return NULL;
@@ -132,7 +132,7 @@ namespace dooqu_server
 			return this->clients_[(this->first_pos_ + 2) % DESK_CAPACITY];
 		}
 
-		game_client* ddz_desk::previous()
+		ws_client* ddz_desk::previous()
 		{
 			if (this->first_pos_ == -1)
 				return NULL;
@@ -168,7 +168,7 @@ namespace dooqu_server
 			return -1;
 		}
 
-		int ddz_desk::pos_index_of(game_client* client)
+		int ddz_desk::pos_index_of(ws_client* client)
 		{
 			for (int i = 0; i < ddz_desk::DESK_CAPACITY; ++i)
 			{
@@ -217,18 +217,18 @@ namespace dooqu_server
 		}
 
 
-		void ddz_desk::write_to_everyone(char* message)
-		{
-			for (int i = 0; i < ddz_desk::DESK_CAPACITY; ++i)
-			{
-				game_client* curr_client = this->pos_client(i);
+		// void ddz_desk::write_to_everyone(char* message)
+		// {
+		// 	for (int i = 0; i < ddz_desk::DESK_CAPACITY; ++i)
+		// 	{
+		// 		ws_client* curr_client = this->pos_client(i);
 
-				if (curr_client != NULL)
-				{
-					curr_client->write(message);
-				}
-			}
-		}
+		// 		if (curr_client != NULL)
+		// 		{
+		// 			curr_client->write_frame(true, ws_framedata::opcode::TEXT, message);
+		// 		}
+		// 	}
+		// }
 
 
 		void ddz_desk::set_running(bool is_running)
