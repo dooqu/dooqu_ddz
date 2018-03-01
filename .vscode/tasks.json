@@ -18,7 +18,7 @@
                 "-I/home/jack/cpp_proj/dooqu_service_ssl/src",
                 "-L/home/jack/cpp_proj/dooqu_service_ssl/bin/Debug",
                 "-o ${workspaceFolder}/bin/Debug/libdooqu_ddz.so",
-                "-l:libdooqu_service_ssl.a",        
+                "-l:libdooqu_service_ssl.a", 
                 "-pthread"
             ],
             "group": {

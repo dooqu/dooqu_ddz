@@ -9,7 +9,7 @@ namespace dooqu_server
 		struct service_error : public dooqu_service::service::service_error
 		{
 		public:
-			static const int GAME_IS_FULL = 20;
+			static const unsigned short GAME_IS_FULL = 4050;
 		};
 	}
 }

@@ -166,7 +166,7 @@ void ddz_plugin::on_client_join(ws_client* client)
     client->set_game_info(game_info);
 
     game_plugin::on_client_join(client);
-    client->write_frame(true, ws_framedata::BINARY, "LOG %s %s %d%c", this->game_id(), client->id(), this->max_waiting_duration_, 0);
+    client->write_frame(true, ws_framedata::TEXT, "LOG %s %s %d%c", this->game_id(), client->id(), this->max_waiting_duration_, 0);
 }
 
 //client 离开，会发送BYE命令；
@@ -203,7 +203,7 @@ void ddz_plugin::on_client_join_desk(ws_client* client, ddz_desk* desk, int pos_
     game_info->desk_ = desk;
 
     //先通知用户进入桌子
-    client->write_frame(true, 1, "IDK %s %d%c", desk->id(), pos_index, 0);
+    client->write_frame(true, ws_framedata::TEXT, "IDK %s %d%c", desk->id(), pos_index, 0);
 
     //后进来用户的游戏币信息
     //房间里每个玩家的游戏币信息
@@ -217,11 +217,11 @@ void ddz_plugin::on_client_join_desk(ws_client* client, ddz_desk* desk, int pos_
         ddz_game_info* curr_game_info = ((ddz_game_info*)desk->pos_client(i)->get_game_info());
         //填充当前玩家的游戏币信息
         //向进入桌子的玩家通知当前桌子的玩家列表
-        client->write_frame(true, 1, "LSD %s %s %s %c %d%c", desk->pos_client(i)->id(), desk->pos_client(i)->name(), ddz_plugin::POS_STRINGS[i], (curr_game_info->is_ready()) ? '1' : '0', curr_game_info->money(), 0);
+        client->write_frame(true, ws_framedata::TEXT, "LSD %s %s %s %c %d%c", desk->pos_client(i)->id(), desk->pos_client(i)->name(), ddz_plugin::POS_STRINGS[i], (curr_game_info->is_ready()) ? '1' : '0', curr_game_info->money(), 0);
         //向已有的玩家通知进来玩家的信息
         if (desk->pos_client(i) != client)
         {
-            desk->pos_client(i)->write_frame(true, 1, "JDK %s %s %s %c %d%c", client->id(), client->name(), ddz_plugin::POS_STRINGS[pos_index], '0', game_info->money(), 0);
+            desk->pos_client(i)->write_frame(true, ws_framedata::TEXT, "JDK %s %s %s %c %d%c", client->id(), client->name(), ddz_plugin::POS_STRINGS[pos_index], '0', game_info->money(), 0);
         }
     }
 }
@@ -250,7 +250,7 @@ void ddz_plugin::on_client_leave_desk(ws_client* client, ddz_desk* desk, int rea
     //如果玩家还在线，通知他已经成功离开
     if (client->is_availabled())
     {
-        client->write_frame(true, 1, "ODK %s %s%c", desk->id(), ddz_desk::POS_STRINGS[pos_index], NULL);
+        client->write_frame(true, ws_framedata::TEXT, "ODK %s %s%c", desk->id(), ddz_desk::POS_STRINGS[pos_index], NULL);
     }
 
     //通知每个人LDK的消息
@@ -260,7 +260,7 @@ void ddz_plugin::on_client_leave_desk(ws_client* client, ddz_desk* desk, int rea
 
         if (curr_client != NULL)
         {
-            curr_client->write_frame(true, 1, "LDK %s %s%c", client->id(), ddz_desk::POS_STRINGS[pos_index], NULL);
+            curr_client->write_frame(true, ws_framedata::TEXT, "LDK %s %s%c", client->id(), ddz_desk::POS_STRINGS[pos_index], NULL);
         }
     }
 
@@ -321,7 +321,7 @@ void ddz_plugin::on_game_start(ddz_desk* desk, int verifi_code)
         curr_game_info->reset(false);
 
         pos_poker_list::iterator poker_list = desk->pos_pokers(i)->begin();
-        desk->pos_client(i)->write_frame(true, 1, "STT %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s%c",
+        desk->pos_client(i)->write_frame(true, ws_framedata::TEXT, "STT %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s%c",
                                    (*++poker_list),
                                    (*++poker_list),
                                    (*++poker_list),
@@ -451,7 +451,7 @@ void ddz_plugin::on_game_bid(ddz_desk* desk, int verifi_code)
 
         for (int i = 0; i < ddz_desk::DESK_CAPACITY; ++i)
         {
-            desk->pos_client(i)->write_frame(true, 1, "BID %d %d%c", desk->curr_pos(), desk->multiple(), NULL);
+            desk->pos_client(i)->write_frame(true, ws_framedata::TEXT, "BID %d %d%c", desk->curr_pos(), desk->multiple(), NULL);
         }
 
         //机器人模式逻辑，如果是机器人模式，那么自动叫、抢地主
@@ -611,8 +611,8 @@ void ddz_plugin::on_game_stop(ddz_desk* desk, ws_client* client, bool normal)
             }
 
             //将牌面信息发送给当前curr_pos的下家和下下家
-            desk->pos_client((curr_index + 1) % 3)->write_frame(true, 1, buffer);
-            desk->pos_client((curr_index + 2) % 3)->write_frame(true, 1, buffer);
+            desk->pos_client((curr_index + 1) % 3)->write_frame(true, ws_framedata::TEXT, "%s%c", buffer, NULL);
+            desk->pos_client((curr_index + 2) % 3)->write_frame(true, ws_framedata::TEXT, "%s%c", buffer, NULL);
         }
 
         //同步比分信息
@@ -853,7 +853,7 @@ void ddz_plugin::on_join_desk_handle(ws_client* client, command* cmd)
         }
     }
 
-    client->write_frame(true, 1, "IDK -1%c", NULL);
+    client->write_frame(true, ws_framedata::TEXT, "IDK -1%c", NULL);
 }
 
 
@@ -1166,9 +1166,7 @@ void ddz_plugin::on_client_card_handle(ws_client* client, command* cmd)
         //如果是游戏的第一把牌，或者是自己带牌权出牌， 是不允许“过牌”的。
         if (desk->curr_shower_ == NULL || desk->curr_shower_ == desk->current())
         {
-            char buffer[32] = { 0 };
-            sprintf(buffer, "NOT %s", client->id());
-            client->write_frame(true, ws_framedata::opcode::TEXT, buffer);
+            client->write_frame(true, ws_framedata::opcode::TEXT, "NOT %s%c", client->id(), NULL);
             return;
         }
 
@@ -1269,7 +1267,7 @@ void ddz_plugin::on_client_card_refuse(ws_client* client, command* cmd)
 
         p_size += std::sprintf(&buffer[p_size], " %s", cmd->params(i));
     }
-    client->write_frame(true, 1, buffer);
+    client->write_frame(true, ws_framedata::TEXT, "%s%c", buffer, NULL);
 }
 
 
@@ -1451,6 +1449,7 @@ void ddz_plugin::on_client_bye_handle(ws_client* client, command* cmd)
 
 bool ddz_plugin::need_update_offline_client(ws_client* c, string& serverURL, string& path)
 {
+    return false;
     serverURL = "service.wechat.dooqu.com";
     path = "/";
     return true;
